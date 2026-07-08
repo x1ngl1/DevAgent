@@ -1,0 +1,25 @@
+# API Keys & secrets
+.env
+*.env.local
+
+# Virtual environment
+TraeAI-*/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Outputs
+outputs/*
+
+# Logs
+*.log
+uvicorn*.log
