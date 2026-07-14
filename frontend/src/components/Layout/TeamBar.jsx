@@ -189,7 +189,7 @@ export default function TeamBar({ onWorkerClick }) {
 
         {/* 启用开关 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: 12, color: '#94A3B8', flexShrink: 0 }}>启用</span>
+          <span style={{ fontSize: 12, color: '#7A7D85', flexShrink: 0 }}>启用</span>
           <Switch
             checked={cfg.is_enabled !== false}
             onChange={(v) => updateConfig(id, 'is_enabled', v)}
@@ -242,7 +242,7 @@ export default function TeamBar({ onWorkerClick }) {
                 <div>{info.label}</div>
                 <div style={{ fontSize: 11, opacity: 0.7 }}>
                   {cfg.model_name || '未配置'}
-                  {hasKey ? ' 🔑' : ''}
+                  {hasKey ? ' [已配置]' : ''}
                 </div>
               </div>
             } placement="right" mouseEnterDelay={0.3}>
@@ -270,7 +270,7 @@ export default function TeamBar({ onWorkerClick }) {
             <SettingOutlined />
             <span>{configOpen ? WORKER_ROLES[configOpen]?.label : ''} 配置</span>
             {configOpen && configs[configOpen]?.model_name && (
-              <span style={{ fontSize: 12, color: '#94A3B8', fontWeight: 400 }}>
+              <span style={{ fontSize: 12, color: '#7A7D85', fontWeight: 400 }}>
                 {configs[configOpen].model_name}
               </span>
             )}
@@ -280,7 +280,7 @@ export default function TeamBar({ onWorkerClick }) {
         onCancel={() => setConfigOpen(null)}
         footer={null}
         width={440}
-        destroyOnClose
+        destroyOnHidden
         maskClosable={false}
         style={{ top: 40, left: 20 }}
       >

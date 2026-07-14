@@ -1,47 +1,62 @@
 :root {
-  --color-brand: #0F172A;
-  --color-brand-text: #94A3B8;
-  --color-bg: #F1F5F9;
-  --color-surface: #FFFFFF;
-  --color-sidebar: #F8FAFC;
-  --color-border: #E2E8F0;
-  --color-divider: #F1F5F9;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-tertiary: #94A3B8;
-  --color-text-quaternary: #CBD5E1;
-  --color-text-inverse: #FFFFFF;
-  --color-accent: #0891B2;
-  --color-accent-hover: #0E7490;
-  --color-accent-light: #ECFEFF;
-  --color-accent-glow: rgba(8,145,178,0.08);
-  --color-success: #059669;
-  --color-success-bg: #D1FAE5;
-  --color-warning: #D97706;
-  --color-warning-bg: #FEF3C7;
-  --color-danger: #DC2626;
-  --color-danger-bg: #FEE2E2;
-  --color-info: #0891B2;
+  /* === 背景层（三级深蓝黑递进）=== */
+  --color-bg: #111F26;             /* 页面底色 */
+  --color-sidebar: #0E1A20;        /* 侧栏 */
+  --color-surface: #1A2A33;        /* 卡片/面板 */
+  --color-surface-elevated: #1E2B35; /* 悬浮层 */
+
+  /* === 品牌色（酸橙黄主色 + 电光青/霓虹粉/电光紫副色）=== */
+  --color-brand: #DDFF28;
+  --color-brand-text: #111F26;
+  --color-accent: #DDFF28;
+  --color-accent-hover: #C0E000;
+  --color-accent-light: rgba(221,255,40,0.1);
+  --color-accent-glow: rgba(221,255,40,0.2);
+
+  --color-secondary: #00E5FF;
+  --color-info: #00E5FF;
+
+  /* === Worker Agent 四色 === */
+  --color-worker-leader: #DDFF28;
+  --color-worker-coder: #00E5FF;
+  --color-worker-pm: #FF6EC7;
+  --color-worker-tester: #7B61FF;
+
+  /* === 边框 === */
+  --color-border: rgba(122,125,133,0.15);
+  --color-divider: rgba(122,125,133,0.08);
+
+  /* === 文字 === */
+  --color-text-primary: #F7F7F5;
+  --color-text-secondary: #A8ABB0;
+  --color-text-tertiary: #7A7D85;
+  --color-text-quaternary: #5A5E65;
+  --color-text-inverse: #111F26;
+
+  /* === 功能色 === */
+  --color-success: #22C55E;
+  --color-success-bg: rgba(34,197,94,0.12);
+  --color-warning: #F59E0B;
+  --color-warning-bg: rgba(245,158,11,0.12);
+  --color-danger: #EF4444;
+  --color-danger-bg: rgba(239,68,68,0.12);
+
+  /* === 排版 === */
   --font-display: "Archivo",sans-serif;
   --font-body: "DM Sans",-apple-system,sans-serif;
   --font-mono: "JetBrains Mono",monospace;
-  --text-xs: 10px;
-  --text-sm: 12px;
-  --text-base: 13px;
-  --text-md: 14px;
-  --text-lg: 16px;
-  --text-xl: 20px;
-  --text-2xl: 24px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+  --text-xs: 10px; --text-sm: 12px; --text-base: 13px;
+  --text-md: 14px; --text-lg: 16px; --text-xl: 20px; --text-2xl: 24px;
+
+  /* === 间距 === */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px;
+  --space-4: 16px; --space-5: 20px; --space-6: 24px;
+
+  /* === 圆角 === */
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+
+  /* === 阴影 === */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 }

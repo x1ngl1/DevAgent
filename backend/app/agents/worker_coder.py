@@ -1,22 +1,22 @@
-"""程序员Worker - 编写业务代码 & 参与讨论"""
+"""测试工程师Worker - 为指定函数编写单元测试 & 参与讨论"""
 import json
 import logging
 from typing import Dict, Any
 
 from app.agents.base import AgentBase
-from app.utils.prompt_templates import CODER_SYSTEM, CODER_DISCUSS_SYSTEM, CODER_SYSTEM_WITH_TOOLS
+from app.utils.prompt_templates import CODER_TEST_SYSTEM, CODER_DISCUSS_SYSTEM, CODER_SYSTEM_WITH_TOOLS
 
 logger = logging.getLogger(__name__)
 
 
 class CoderWorker(AgentBase):
-    """程序员Worker：编写业务代码和README，参与团队讨论"""
+    """测试工程师Worker：为指定函数编写单元测试，参与团队讨论"""
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__("coder", config)
 
     async def discuss(self, context: Dict) -> Dict:
-        """参与团队讨论，提出技术意见"""
+        """参与团队讨论，提出测试策略意见"""
         await self._update_status("running", {"phase": "discussing"})
         try:
             user_input = context.get("user_input", "")
@@ -25,7 +25,7 @@ class CoderWorker(AgentBase):
             prev_text = json.dumps(prev_discussion, ensure_ascii=False, indent=2) if prev_discussion else "无"
 
             response = await self.chat(
-                prompt=f"用户需求：{user_input}\n\n任务拆解：\n{subtask_summary}\n\n已有讨论：\n{prev_text}",
+                prompt=f"需要测试的代码：{user_input}\n\n测试任务拆解：\n{subtask_summary}\n\n已有讨论：\n{prev_text}",
                 system_prompt=CODER_DISCUSS_SYSTEM,
             )
             result = self.parse_json_response(response)
@@ -35,24 +35,38 @@ class CoderWorker(AgentBase):
         except Exception as e:
             logger.error(f"Coder讨论失败: {e}")
             await self._update_status("error", {"error": str(e)})
-            return {"opinion": "方案可行，准备实施。", "concerns": ""}
+            return {"opinion": "测试方案可行，准备实施。", "concerns": ""}
 
-    async def write_code(self, task_description: str) -> Dict:
-        """根据任务描述编写代码（使用工具辅助）"""
-        await self._update_status("running", {"phase": "writing"})
+    async def write_tests(self, function_code: str, function_name: str = "",
+                          signature: str = "", dependencies: list = None) -> Dict:
+        """为指定函数编写单元测试
+
+        Args:
+            function_code: 函数的源代码
+            function_name: 函数名
+            signature: 函数签名描述
+            dependencies: 依赖的外部库列表
+
+        Returns:
+            dict: 包含 test_code, test_file, summary 等字段
+        """
+        await self._update_status("running", {"phase": "writing_tests"})
 
         try:
-            # 使用 chat_with_tools 替代 chat，支持工具调用
-            prompt = f"""任务描述：{task_description}
+            deps_str = ", ".join(dependencies) if dependencies else "无"
 
-你可以使用以下工具辅助完成任务：
-- web_search: 搜索相关技术资料和最佳实践
-- run_python: 快速验证代码片段
-- analyze_code: 分析已有代码结构
-- read_project_file: 读取已有文件内容
-- query_codebase: 搜索代码库中的相关代码
+            prompt = f"""需要测试的函数名称：{function_name}
 
-请完成编码任务，输出JSON格式的代码文件。"""
+函数签名：{signature}
+
+函数源代码：
+```python
+{function_code}
+```
+
+依赖的外部库：{deps_str}
+
+请编写完整的 pytest 单元测试，覆盖所有重要场景。"""
 
             response = await self.chat_with_tools(
                 prompt=prompt,
@@ -60,21 +74,32 @@ class CoderWorker(AgentBase):
             )
             result = self.parse_json_response(response)
 
-            files = result.get("files", {})
+            test_code = result.get("test_code", "")
+            test_file = result.get("test_file", f"test_{function_name}.py")
+            scenarios = result.get("test_scenarios", [])
+
+            # 构造统一的 files 格式
+            files = {test_file: test_code}
             file_list = list(files.keys())
-            import logging as _lg; _lg.getLogger(__name__).info(f"Coder raw response: {str(result)[:500]}")
-            if not file_list:
-                _lg.getLogger(__name__).warning(f"Coder produced 0 files! Full result: {json.dumps(result, ensure_ascii=False)[:1000]}")
+
+            logger.info(f"Coder 生成测试: {test_file}, 场景: {scenarios}")
 
             await self._update_status("done", {
-                "phase": "writing",
+                "phase": "writing_tests",
                 "files": file_list,
-                "summary": result.get("summary", ""),
+                "summary": result.get("summary", f"为 {function_name} 生成了测试"),
                 "language": result.get("language", "Python"),
+                "test_scenarios": scenarios,
             })
-            return result
+            return {
+                "files": files,
+                "summary": result.get("summary", f"为 {function_name} 生成了 {len(scenarios)} 个测试场景"),
+                "language": result.get("language", "Python"),
+                "test_scenarios": scenarios,
+                "test_file": test_file,
+            }
 
         except Exception as e:
-            logger.error(f"程序员编码失败: {e}")
+            logger.error(f"测试编写失败: {e}")
             await self._update_status("error", {"error": str(e)})
             raise

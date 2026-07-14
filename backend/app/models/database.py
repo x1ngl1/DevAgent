@@ -3,6 +3,7 @@ import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from app.models.task import Base as TaskBase
 from app.models.worker import Base as WorkerBase
+from app.models.experience import Base as ExperienceBase
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./app.db")
 
@@ -15,6 +16,7 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(TaskBase.metadata.create_all)
         await conn.run_sync(WorkerBase.metadata.create_all)
+        await conn.run_sync(ExperienceBase.metadata.create_all)
 
 
 async def get_session():

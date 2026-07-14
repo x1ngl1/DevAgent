@@ -52,6 +52,10 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# RAG 知识库数据
+rag_data/
+backend/rag_data/
+
 # 临时文件
 *.tmp
 *.bak

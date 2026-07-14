@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, Space, Typography, Tag } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import useWorkerStore from '../../stores/workerStore';
 import useTaskStore from '../../stores/taskStore';
 
@@ -13,9 +13,9 @@ const INTERVENTION_LABELS = {
   test_report: { title: 'Test Report', description: 'Tests completed. Review the test results.' },
 };
 
-export default function 干预请求Panel() {
-  const { interventionRequest, clear干预请求Request } = useWorkerStore();
-  const { send干预请求 } = useTaskStore();
+export default function InterventionPanel() {
+  const { interventionRequest, clearInterventionRequest } = useWorkerStore();
+  const { sendIntervention } = useTaskStore();
   const [feedback, setFeedback] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,11 +27,11 @@ export default function 干预请求Panel() {
   const handleDecision = async (decision) => {
     setSubmitting(true);
     try {
-      await send干预请求(request_id, decision, feedback);
-      clear干预请求Request();
+      await sendIntervention(request_id, decision, feedback);
+      clearInterventionRequest();
       setFeedback('');
     } catch (e) {
-      console.error('干预请求 submit failed:', e);
+      console.error('Intervention submit failed:', e);
     } finally {
       setSubmitting(false);
     }
@@ -43,7 +43,7 @@ export default function 干预请求Panel() {
     <Modal
       title={
         <Space>
-          <span style={{ fontSize: 16 }}>🤔</span>
+          <span style={{ fontSize: 16, color: '#D97706' }}><QuestionCircleOutlined /></span>
           <span>{meta.title}</span>
           <Tag color="warning">干预请求</Tag>
         </Space>
@@ -54,14 +54,14 @@ export default function 干预请求Panel() {
       width={520}
       closable={false}
       maskClosable={false}
-      destroyOnClose
+      destroyOnHidden
     >
       <div style={{ marginBottom: 16 }}>
         <Text type="secondary">{meta.description}</Text>
       </div>
 
       {isPMRetry && context && (
-        <div style={{ background: '#FEF3C7', padding: '12px 16px', borderRadius: 8, marginBottom: 16 }}>
+        <div style={{ background: 'rgba(245,158,11,0.08)', padding: '12px 16px', borderRadius: 8, marginBottom: 16, border: '1px solid rgba(245,158,11,0.2)' }}>
           <div style={{ marginBottom: 4 }}><Text strong>评分：</Text> <Tag color={context.score >= 60 ? 'green' : 'red'}>{context.score}/100</Tag></div>
           {context.feedback && <div style={{ marginBottom: 4 }}><Text strong>反馈：</Text> <Text>{context.feedback}</Text></div>}
           <div><Text strong>已重试：</Text> <Text>{context.retry_count}/{context.max_retries}</Text></div>

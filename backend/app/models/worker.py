@@ -12,9 +12,9 @@ class WorkerConfig(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     worker_id = Column(String(50), unique=True, nullable=False)  # leader/coder/pm/tester
-    provider = Column(String(50), default="deepseek")
-    model_name = Column(String(100), default="deepseek-v4-flash")
-    api_base_url = Column(String(255), default="https://api.deepseek.com/v1")
+    provider = Column(String(50), default="aliyun")
+    model_name = Column(String(100), default="qwen-plus")
+    api_base_url = Column(String(255), default="https://dashscope.aliyuncs.com/compatible-mode/v1")
     api_key = Column(Text, default="")  # Base64编码存储
     temperature = Column(Float, default=0.3)
     max_tokens = Column(Integer, default=4096)

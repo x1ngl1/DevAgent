@@ -8,6 +8,12 @@
 /* ---- Reset ---- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Scrollbar — acid lime theme */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3A4048; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #DDFF28; }
+
 html, body, #root {
   height: 100%;
   width: 100%;
@@ -133,16 +139,16 @@ html, body, #root {
   justify-content: space-between;
   height: var(--nav-height);
   padding: 0 var(--space-4);
-  background: var(--color-brand);
+  background: #DDFF28;
   flex-shrink: 0;
-  border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+  border-bottom: none;
 }
 
 .top-nav .nav-brand {
   font-family: var(--font-display);
   font-weight: var(--weight-semibold);
   font-size: var(--text-md);
-  color: var(--color-text-brand);
+  color: #111F26;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -152,8 +158,8 @@ html, body, #root {
 
 .top-nav .nav-brand .brand-logo {
   font-size: 16px;
-  color: var(--color-accent);
-  opacity: 0.8;
+  color: #111F26;
+  opacity: 1;
 }
 
 .top-nav .nav-brand .brand-badge {
@@ -247,13 +253,13 @@ html, body, #root {
 
 .terminal-header .terminal-label .dot.dot-active {
   background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 10px rgba(221,255,40,0.6), 0 0 20px rgba(221,255,40,0.2);
   animation: dot-breath 1.4s ease-in-out infinite;
 }
 
 @keyframes dot-breath {
-  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px rgba(6, 182, 212, 0.4); }
-  50%      { opacity: 0.5; transform: scale(0.8); box-shadow: 0 0 12px rgba(6, 182, 212, 0.7); }
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px rgba(221,255,40,0.4); }
+  50%      { opacity: 0.5; transform: scale(0.8); box-shadow: 0 0 12px rgba(221,255,40,0.7); }
 }
 
 /* ---- Stage Pill（当前阶段标识） ---- */
@@ -274,7 +280,7 @@ html, body, #root {
   letter-spacing: 0;
   border: 1px solid var(--color-accent);
   color: var(--color-accent);
-  background: rgba(255,255,255,0.5);
+  background: rgba(221,255,40,0.08);
   animation: stage-in 0.3s ease-out;
 }
 
@@ -463,7 +469,7 @@ html, body, #root {
 .filter-chip.filter-active {
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #fff;
+  color: #111F26;
 }
 
 .discuss-badge {
@@ -853,6 +859,43 @@ html, body, #root {
   font-size: var(--text-sm);
   color: var(--color-warning);
   flex-shrink: 0;
+}
+
+/* Uploaded files bar */
+.uploaded-files-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-5);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.uploaded-file-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+}
+
+.uploaded-file-name {
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploaded-file-size {
+  margin-left: 4px;
+  color: var(--color-text-tertiary);
+  font-size: 10px;
 }
 
 /* ============================================
@@ -1577,4 +1620,229 @@ html, body, #root {
   0% { transform: scale(0.8); opacity: 0.5; }
   50% { transform: scale(1.1); opacity: 0.2; }
   100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+/* ============================================
+   Tool Call Running Animation
+   ============================================ */
+.tool-call-running {
+  display: inline-block;
+  animation: tool-pulse 1s ease-in-out infinite;
+  font-size: 7px;
+}
+
+@keyframes tool-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Breathing running dot for worker status */
+.mc-status.running {
+  position: relative;
+}
+.mc-status.running::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-left: 4px;
+  animation: status-breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes status-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ============================================
+   Deep Space Tech — Glow Effects
+   ============================================ */
+
+/* Primary button hover glow */
+.ant-btn-primary:hover {
+  box-shadow: 0 0 16px rgba(221,255,40,0.3);
+  transform: translateY(-1px);
+}
+
+/* Input focus ring */
+.ant-input:focus,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  box-shadow: 0 0 0 2px rgba(221,255,40,0.2) !important;
+  border-color: #DDFF28 !important;
+}
+
+/* Select dropdown dark adaptation */
+.ant-select-dropdown {
+  background: #1E2B35 !important;
+}
+.ant-select-item {
+  color: #F7F7F5 !important;
+}
+.ant-select-item-option-selected {
+  background: rgba(221,255,40,0.12) !important;
+}
+.ant-select-item-option-active {
+  background: rgba(221,255,40,0.06) !important;
+}
+
+/* Modal dark adaptation */
+.ant-modal-content {
+  background: #1A2A33 !important;
+}
+.ant-modal-header {
+  background: transparent !important;
+}
+.ant-modal-title {
+  color: #F7F7F5 !important;
+}
+
+/* Drawer dark adaptation */
+.ant-drawer-content {
+  background: #1A2A33 !important;
+}
+.ant-drawer-header {
+  background: transparent !important;
+  border-bottom-color: rgba(122,125,133,0.12) !important;
+}
+.ant-drawer-title {
+  color: #F7F7F5 !important;
+}
+
+/* Tooltip dark adaptation */
+.ant-tooltip-inner {
+  background: #1E2B35 !important;
+  color: #F7F7F5 !important;
+}
+
+/* Tag dark adaptation */
+.ant-tag {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.08);
+  color: #F7F7F5;
+}
+
+/* === Button dark adaptation === */
+.ant-btn-default {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(122,125,133,0.2);
+  color: #A8ABB0;
+}
+.ant-btn-default:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(221,255,40,0.3);
+  color: #F7F7F5;
+}
+.ant-btn-text {
+  color: #7A7D85;
+}
+.ant-btn-text:hover {
+  color: #F7F7F5;
+  background: rgba(255,255,255,0.06);
+}
+.ant-btn-dangerous {
+  box-shadow: none;
+}
+.ant-btn-dangerous:hover {
+  box-shadow: none;
+}
+
+/* === Worker Avatar Colors === */
+.message-avatar-leader,
+.thinking-avatar-leader { background: var(--color-worker-leader); }
+
+.message-avatar-coder,
+.thinking-avatar-coder { background: var(--color-worker-coder); }
+
+.message-avatar-pm,
+.thinking-avatar-pm { background: var(--color-worker-pm); }
+
+.message-avatar-tester,
+.thinking-avatar-tester { background: var(--color-worker-tester); }
+
+/* ============================================
+   Acid Lime — Per-Agent Animations
+   ============================================ */
+
+/* 1. 状态点呼吸灯 — 四个 Agent 各自色 */
+@keyframes pulse-lime  { 0%,100%{opacity:1;box-shadow:0 0 6px rgba(221,255,40,0.4)}  50%{opacity:.55;box-shadow:0 0 14px rgba(221,255,40,0.8)} }
+@keyframes pulse-cyan  { 0%,100%{opacity:1;box-shadow:0 0 6px rgba(0,229,255,0.4)}   50%{opacity:.55;box-shadow:0 0 14px rgba(0,229,255,0.8)} }
+@keyframes pulse-pink  { 0%,100%{opacity:1;box-shadow:0 0 6px rgba(255,110,199,0.4)} 50%{opacity:.55;box-shadow:0 0 14px rgba(255,110,199,0.8)} }
+@keyframes pulse-violet{ 0%,100%{opacity:1;box-shadow:0 0 6px rgba(123,97,255,0.4)}  50%{opacity:.55;box-shadow:0 0 14px rgba(123,97,255,0.8)} }
+
+.dot-leader  { animation: pulse-lime   1.4s ease-in-out infinite; }
+.dot-coder   { animation: pulse-cyan   1.4s ease-in-out infinite; }
+.dot-pm      { animation: pulse-pink   1.4s ease-in-out infinite; }
+.dot-tester  { animation: pulse-violet 1.4s ease-in-out infinite; }
+
+/* 2. 消息入场 */
+@keyframes msg-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.message-row { animation: msg-fade-up 0.25s ease-out; }
+
+/* 3. 三个圆点错峰跳动 */
+@keyframes dot-bounce { 0%,60%,100%{transform:translateY(0);opacity:.3} 30%{transform:translateY(-3px);opacity:1} }
+.typing-dot { animation: dot-bounce 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .3s;  }
+
+.typing-coder  .typing-dot { background: #00E5FF; }
+.typing-pm     .typing-dot { background: #FF6EC7; }
+.typing-tester .typing-dot { background: #7B61FF; }
+.typing-leader .typing-dot { background: #DDFF28; }
+
+/* 4. 进度条扫光 */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.progress-fill {
+  background: linear-gradient(90deg, #DDFF28 0%,#DDFF28 40%,#C0E000 50%,#DDFF28 60%,#DDFF28 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* 5. 按钮悬浮 */
+.ant-btn-primary {
+  transition: all .2s ease;
+}
+.ant-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(221,255,40,0.35), 0 0 32px rgba(221,255,40,0.12);
+}
+
+/* 6. 卡片悬浮抬升 */
+.monitor-card {
+  transition: all .15s ease;
+}
+.monitor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+/* 7. Agent 头像悬浮发光 */
+.avatar-leader:hover { box-shadow: 0 0 12px rgba(221,255,40,0.5); }
+.avatar-coder:hover  { box-shadow: 0 0 12px rgba(0,229,255,0.5);  }
+.avatar-pm:hover     { box-shadow: 0 0 12px rgba(255,110,199,0.5);}
+.avatar-tester:hover { box-shadow: 0 0 12px rgba(123,97,255,0.5); }
+
+/* 8. LIVE 标签脉冲 */
+@keyframes live-ping {
+  0%,100%{box-shadow:0 0 0 0 rgba(221,255,40,.4)}
+  50%   {box-shadow:0 0 0 6px rgba(221,255,40,0)}
+}
+.live-tag { animation: live-ping 2s ease-out infinite; }
+
+/* === 可访问性：减少动效 === */
+@media (prefers-reduced-motion: reduce) {
+  .dot-leader,.dot-coder,.dot-pm,.dot-tester,
+  .message-row,.typing-dot,.progress-fill,
+  .live-tag { animation: none !important; }
+  .ant-btn-primary:hover,.monitor-card:hover,
+  .avatar-leader:hover,.avatar-coder:hover,
+  .avatar-pm:hover,.avatar-tester:hover { transform: none !important; }
 }

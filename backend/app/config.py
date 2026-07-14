@@ -8,10 +8,10 @@ load_dotenv()
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 
-# DeepSeek默认配置
+# DeepSeek默认配置（实际默认为阿里云通义千问）
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
-DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
-DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-v4-flash")
+DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "qwen-plus")
 
 # Docker沙箱
 SANDBOX_PYTHON_IMAGE = os.getenv("SANDBOX_PYTHON_IMAGE", "ai-sandbox-python:latest")
@@ -31,9 +31,9 @@ DEFAULT_WORKER_CONFIG = {
 
 WORKER_ROLES = {
     "leader": {"label": "Leader", "icon": "L", "description": "coordinator"},
-    "coder": {"label": "Programmer", "icon": "C", "description": "code writing"},
+    "coder": {"label": "Test Generator", "icon": "C", "description": "unit test generation"},
     "pm": {"label": "PM Agent", "icon": "PM", "description": "quality review"},
-    "tester": {"label": "Tester", "icon": "T", "description": "unit test"},
+    "tester": {"label": "Tester", "icon": "T", "description": "test execution"},
 }
 
 # ===== enhanced config =====

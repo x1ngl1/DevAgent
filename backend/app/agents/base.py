@@ -22,11 +22,18 @@ class AgentBase:
         self.worker_id = worker_id
         self.config = config
         self._status_callback: Optional[Callable] = None
+        self._stream_callback: Optional[Callable] = None
         # 自动根据角色设置默认工具类别
         self.default_tool_categories = self.ROLE_TOOL_CATEGORIES.get(worker_id, [])
 
     def set_status_callback(self, callback: Callable):
         self._status_callback = callback
+
+    def set_stream_callback(self, callback: Optional[Callable]):
+        """Set a callback for streaming LLM tokens to the frontend.
+        Expected signature: async def callback(token: str) or def callback(token: str)
+        """
+        self._stream_callback = callback
 
     async def _update_status(self, status: str, data: Optional[Dict] = None):
         if self._status_callback:

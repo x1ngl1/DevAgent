@@ -19,13 +19,21 @@ const useTaskStore = create((set, get) => ({
   historyDetail: null,
   historyDetailLoading: false,
 
-  createTask: async (userInput, existingTaskId = null) => {
+  createTask: async (userInput, existingTaskId = null, isFileUpload = false, codeContent = '') => {
     try {
       set({ taskStatus: 'running', taskError: null, zipUrl: null, subtasks: [], queuePosition: 0, isQueued: false, isPaused: false });
       let task_id;
       if (existingTaskId) {
         task_id = existingTaskId;
         set({ currentTask: { id: task_id, userInput }, taskStatus: 'queued' });
+      } else if (codeContent) {
+        // 代码内容直接提交（使用专用端点）
+        const response = await api.post('/tasks/create-with-code', {
+          user_input: userInput,
+          code_content: codeContent,
+        });
+        task_id = response.data.task_id;
+        set({ currentTask: { id: task_id, userInput }, taskStatus: response.data.status || 'queued' });
       } else {
         const response = await api.post('/tasks/create', { user_input: userInput });
         task_id = response.data.task_id;
@@ -41,30 +49,45 @@ const useTaskStore = create((set, get) => ({
 
   setTaskStatus: (taskId, status, data = {}) => {
     const state = get();
-    if (state.currentTask?.id !== taskId) return;
+    // 兼容 SSE 事件在 createTask 之前到达的情况
+    if (state.currentTask && state.currentTask.id !== taskId) return;
     const clearQueue = status === 'running';
-    set({
+    const updates = {
       taskStatus: status,
       zipUrl: data.zip_url || state.zipUrl,
       taskError: data.error || null,
       isQueued: clearQueue ? false : state.isQueued,
       queuePosition: clearQueue ? 0 : state.queuePosition,
-    });
+    };
+    // 如果 currentTask 未设置但收到 running 事件，先建立 currentTask
+    if (!state.currentTask && (status === 'running' || status === 'queued')) {
+      updates.currentTask = { id: taskId, userInput: '' };
+    }
+    set(updates);
   },
 
   queueTask: (taskId, position) => {
     const state = get();
-    if (state.currentTask?.id !== taskId) return;
-    set({ isQueued: true, queuePosition: position, taskStatus: 'queued' });
+    if (state.currentTask && state.currentTask.id !== taskId) return;
+    const updates = { isQueued: true, queuePosition: position, taskStatus: 'queued' };
+    if (!state.currentTask) {
+      updates.currentTask = { id: taskId, userInput: '' };
+    }
+    set(updates);
   },
 
   updateSubtask: (subtaskId, data) => {
     set((state) => {
+      // Normalize depends_on to array
+      const normalized = { ...data };
+      if (normalized.depends_on != null && !Array.isArray(normalized.depends_on)) {
+        normalized.depends_on = [normalized.depends_on];
+      }
       const existing = state.subtasks.find(s => s.id === subtaskId);
       if (existing) {
-        return { subtasks: state.subtasks.map(s => s.id === subtaskId ? { ...s, ...data } : s) };
+        return { subtasks: state.subtasks.map(s => s.id === subtaskId ? { ...s, ...normalized } : s) };
       }
-      return { subtasks: [...state.subtasks, { id: subtaskId, ...data }] };
+      return { subtasks: [...state.subtasks, { id: subtaskId, ...normalized }] };
     });
   },
 
@@ -73,7 +96,7 @@ const useTaskStore = create((set, get) => ({
     if (subtasks.length === 0) { set({ progress: 0, progressText: '' }); return; }
     const done = subtasks.filter(s => s.status === 'done' || s.status === 'failed').length;
     const pct = Math.round((done / subtasks.length) * 100);
-    set({ progress: pct, progressText: `${pct}% ${done}/${subtasks.length} completed` });
+    set({ progress: pct, progressText: `${pct}% ${done}/${subtasks.length} 完成` });
   },
 
   // 暂停/恢复

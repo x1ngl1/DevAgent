@@ -47,8 +47,8 @@ class ConversationService:
         if cfg:
             return {
                 "api_key": decrypt_api_key(cfg.api_key or ""),
-                "api_base_url": cfg.api_base_url or "https://api.deepseek.com/v1",
-                "model_name": cfg.model_name or "deepseek-v4-flash",
+                "api_base_url": cfg.api_base_url or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                "model_name": cfg.model_name or "qwen-plus",
                 "temperature": cfg.temperature or 0.3,
                 "max_tokens": cfg.max_tokens or 4096,
                 "timeout": cfg.timeout or 30,
@@ -56,8 +56,8 @@ class ConversationService:
         import os
         return {
             "api_key": os.getenv("DEEPSEEK_API_KEY", ""),
-            "api_base_url": os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1"),
-            "model_name": os.getenv("DEEPSEEK_MODEL", "deepseek-v4-flash"),
+            "api_base_url": os.getenv("DEEPSEEK_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
+            "model_name": os.getenv("DEEPSEEK_MODEL", "qwen-plus"),
             "temperature": 0.3,
             "max_tokens": 4096,
             "timeout": 30,

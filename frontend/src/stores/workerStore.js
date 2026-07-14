@@ -6,9 +6,9 @@ const nextMsgId = () => `${Date.now()}-${++_msgIdCounter}`;
 
 const defaultWorkerStates = {
   leader: { status: 'idle', phase: '', duration: 0, detail: '' },
-  coder: { status: 'idle', phase: '', duration: 0, detail: '', files: [] },
-  pm: { status: 'idle', phase: '', duration: 0, detail: '', score: null, decision: '' },
-  tester: { status: 'idle', phase: '', duration: 0, detail: '', coverage: null, testFiles: [] },
+  coder: { status: 'idle', phase: '', duration: 0, detail: '', files: [], test_scenarios: [] },
+  pm: { status: 'idle', phase: '', duration: 0, detail: '', score: null, decision: '', hard_score: null, soft_score: null },
+  tester: { status: 'idle', phase: '', duration: 0, detail: '', coverage: null, coverage_detail: null, testFiles: [], test_counts: null },
 };
 
 const useWorkerStore = create((set, get) => ({
@@ -19,6 +19,7 @@ const useWorkerStore = create((set, get) => ({
   streamingMessages: {},    // { worker_id: { content: string, isStreaming: bool } }
   interventionRequest: null, // { request_id, type, context } or null
   isPaused: false,
+  toolCallLogs: {}, // { worker_id: [{tool_name, timestamp, status}] }
 
   setStatus: (workerId, status, data = {}) => {
     set((state) => ({
@@ -34,10 +35,24 @@ const useWorkerStore = create((set, get) => ({
           ...(data.score ? { score: data.score } : {}),
           ...(data.decision ? { decision: data.decision } : {}),
           ...(data.coverage ? { coverage: data.coverage } : {}),
+          ...(data.coverage_detail ? { coverage_detail: data.coverage_detail } : {}),
           ...(data.test_files ? { testFiles: data.test_files } : {}),
+          ...(data.test_counts ? { test_counts: data.test_counts } : {}),
+          ...(data.hard_score ? { hard_score: data.hard_score } : {}),
+          ...(data.soft_score ? { soft_score: data.soft_score } : {}),
+          ...(data.test_scenarios ? { test_scenarios: data.test_scenarios } : {}),
         },
       },
     }));
+  },
+
+  addToolCallLog: (workerId, logEntry) => {
+    set((state) => {
+      const logs = state.toolCallLogs[workerId] || [];
+      logs.unshift({ ...logEntry, timestamp: new Date().toLocaleTimeString() });
+      if (logs.length > 5) logs.pop();
+      return { toolCallLogs: { ...state.toolCallLogs, [workerId]: logs } };
+    });
   },
 
   addChatMessage: (data) => {

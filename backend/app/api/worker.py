@@ -16,9 +16,9 @@ router = APIRouter(prefix="/api/workers", tags=["workers"])
 class WorkerConfigUpdate(BaseModel):
     model_config = {'protected_namespaces': ()}
 
-    provider: str = "deepseek"
-    model_name: str = "deepseek-v4-flash"
-    api_base_url: str = "https://api.deepseek.com/v1"
+    provider: str = "aliyun"
+    model_name: str = "qwen-plus"
+    api_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     api_key: str = ""
     temperature: float = 0.3
     max_tokens: int = 4096
@@ -100,9 +100,9 @@ async def get_worker_config(worker_id: str):
             # 返回默认配置
             return {
                 "worker_id": worker_id,
-                "provider": "deepseek",
-                "model_name": "deepseek-v4-flash",
-                "api_base_url": "https://api.deepseek.com/v1",
+                "provider": "aliyun",
+                "model_name": "qwen-plus",
+                "api_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
                 "api_key": "",
                 "api_key_configured": False,
                 "temperature": 0.3,

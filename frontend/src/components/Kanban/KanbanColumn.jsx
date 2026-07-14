@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, message } from 'antd';
-import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
+import { DownloadOutlined, EyeOutlined, ToolOutlined } from '@ant-design/icons';
 import { STATUS_LABELS } from '../../utils/constants';
 import useTaskStore from '../../stores/taskStore';
+import useWorkerStore from '../../stores/workerStore';
 
 async function downloadZip(zipUrl, suggestedName = 'project.zip') {
   if (!zipUrl) {
@@ -36,6 +37,8 @@ async function downloadZip(zipUrl, suggestedName = 'project.zip') {
 export default function KanbanColumn({ column, workerState, subtasks }) {
   const { key, title } = column;
   const { zipUrl } = useTaskStore();
+  const toolCallLogs = useWorkerStore((s) => s.toolCallLogs[key] || []);
+  const streamMsg = useWorkerStore((s) => s.streamingMessages[key]);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [detailModal, setDetailModal] = useState({ open: false, title: '', content: '' });
 
@@ -256,6 +259,44 @@ export default function KanbanColumn({ column, workerState, subtasks }) {
             </div>
           )}
         </>
+      )}
+
+      {/* 工具调用日志（运行时显示） */}
+      {toolCallLogs.length > 0 && state.status === 'running' && (
+        <div style={{ marginTop: 6, borderTop: '1px solid var(--color-border)', paddingTop: 4 }}>
+          <div style={{ fontSize: 9, color: 'var(--color-text-tertiary)', marginBottom: 2 }}>
+            <ToolOutlined style={{ marginRight: 2 }} />工具调用
+          </div>
+          {toolCallLogs.slice(0, 3).map((log, i) => (
+            <div key={i} style={{ fontSize: 8, color: 'var(--color-text-tertiary)', lineHeight: 1.6, paddingLeft: 4 }}>
+              {log.status === 'running' ? (
+                <span className="tool-call-running">▶</span>
+              ) : (
+                <span style={{ color: '#52c41a' }}>✓</span>
+              )}
+              {' '}{log.tool_name}
+              {log.args && <span style={{ color: '#7A7D85' }}> {log.args}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Agent 实时思考过程 */}
+      {state.status === 'running' && streamMsg?.isStreaming && streamMsg?.content && (
+        <div style={{
+          marginTop: 6,
+          padding: '4px 6px',
+          background: 'rgba(255,255,255,0.04)',
+          borderRadius: 4,
+          fontSize: 8,
+          lineHeight: 1.5,
+          color: '#A8ABB0',
+          maxHeight: 40,
+          overflow: 'hidden',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          {streamMsg.content}
+        </div>
       )}
 
       {/* 详情弹窗 */}

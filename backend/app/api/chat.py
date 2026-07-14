@@ -81,14 +81,14 @@ async def chat_send(request: ChatRequest):
             llm_config = dict(DEFAULT_WORKER_CONFIG)
             import os
             llm_config["api_key"] = os.getenv("DEEPSEEK_API_KEY", "")
-            llm_config["api_base_url"] = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
+            llm_config["api_base_url"] = os.getenv("DEEPSEEK_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
         else:
             from app.utils.crypto import decrypt_api_key
             api_key = decrypt_api_key(leader_config.api_key or "")
             llm_config = {
                 "api_key": api_key,
-                "api_base_url": leader_config.api_base_url or "https://api.deepseek.com/v1",
-                "model_name": leader_config.model_name or "deepseek-v4-flash",
+                "api_base_url": leader_config.api_base_url or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                "model_name": leader_config.model_name or "qwen-plus",
                 "temperature": 0.1,  # 分类用低温度
                 "max_tokens": 512,
             }

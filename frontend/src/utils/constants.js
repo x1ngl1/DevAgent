@@ -2,10 +2,10 @@
 
 // Worker角色定义
 export const WORKER_ROLES = {
-  leader: { label: 'Leader', icon: '/img/leader.png', description: '副官/调度' },
-  coder: { label: '程序员', icon: '/img/worker.png', description: '代码编写/README' },
-  pm: { label: 'PM Agent', icon: '/img/pm.png', description: '质量审核/决策' },
-  tester: { label: '测试工程师', icon: '/img/test.png', description: '单元测试/覆盖率' },
+  leader: { label: 'Leader', icon: '/img/leader.png', description: '代码分析/调度' },
+  coder: { label: '测试生成', icon: '/img/worker.png', description: '单元测试生成' },
+  pm: { label: 'PM Agent', icon: '/img/pm.png', description: '质量审核/评分' },
+  tester: { label: '测试执行', icon: '/img/test.png', description: '测试执行/覆盖率' },
 };
 
 // 状态颜色映射
@@ -45,10 +45,10 @@ export const TASK_STATUS_COLORS = {
 
 // 看板列定义
 export const KANBAN_COLUMNS = [
-  { key: 'decompose', title: '任务拆解', width: '20%' },
-  { key: 'coder', title: '程序员', width: '20%' },
-  { key: 'pm', title: 'PM审核', width: '20%' },
-  { key: 'tester', title: '测试', width: '20%' },
+  { key: 'decompose', title: '代码分析', width: '20%' },
+  { key: 'coder', title: '测试生成', width: '20%' },
+  { key: 'pm', title: 'PM评分', width: '20%' },
+  { key: 'tester', title: '测试执行', width: '20%' },
   { key: 'summary', title: '汇总', width: '20%' },
 ];
 
